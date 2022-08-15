@@ -17,4 +17,8 @@ public class Member {
         }
     }
 
+    public void addShares(ShareClass c, Integer n) {
+        ownedShares.put(c, ownedShares.get(c) + n);
+    }
+
 }
