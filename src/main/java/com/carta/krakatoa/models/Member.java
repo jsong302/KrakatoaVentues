@@ -6,9 +6,11 @@ import java.util.HashMap;
 
 public class Member {
 
+    String name;
     protected HashMap<ShareClass, Integer> ownedShares;
 
-    public Member() {
+    public Member(String name) {
+        this.name = name;
         ownedShares = new HashMap<>();
         for(ShareClass c : ShareClass.values()) {
             ownedShares.put(c, 0);
