@@ -1,7 +1,7 @@
 package com.carta.krakatoa.enums;
 
 /**
- *  Types for Share classes
+ *  Types of Share classes
  */
 public enum ShareClass {
     A,

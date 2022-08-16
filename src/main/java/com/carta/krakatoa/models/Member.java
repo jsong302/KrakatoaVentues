@@ -21,4 +21,12 @@ public class Member {
         ownedShares.put(c, ownedShares.get(c) + n);
     }
 
+    public HashMap<ShareClass, Integer> getOwnedShares() {
+        return ownedShares;
+    }
+
+    public String getName() {
+        return name;
+    }
+
 }
