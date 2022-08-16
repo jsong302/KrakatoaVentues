@@ -8,6 +8,7 @@ import com.carta.krakatoa.models.ManagingPartner;
 import com.carta.krakatoa.models.Member;
 
 import java.util.HashMap;
+import java.util.Set;
 
 public class FirmUtil {
 
@@ -32,8 +33,58 @@ public class FirmUtil {
         return numShares;
     }
 
-    public static void addShares(Member m, ShareClass c, Integer n, HashMap<ShareClass, Integer> shareDistMap) {
+    private static void addShares(Member m, ShareClass c, Integer n, HashMap<ShareClass, Integer> shareDistMap) {
         m.addShares(c, n);
         shareDistMap.put(c, shareDistMap.getOrDefault(c, 0) + n);
+    }
+
+    public static void distributeProceeds(Firm f) {
+        HashMap<ShareClass, Integer> shareDistMap = f.getShareDistMap();
+        HashMap<Member, Double> investments = f.getInvestments();
+        Set<Member> shareholders = f.getShareholders();
+        HashMap<Member, HashMap<ShareClass, Double>> proceedsDistMap = f.getProceedsDistMap();
+
+        repayInvestment(f, shareDistMap, investments, shareholders, proceedsDistMap);
+
+        int totalShares = 0;
+        for(ShareClass c : ShareClass.values()) {
+            totalShares += shareDistMap.get(c);
+        }
+        double pricePerShare = (f.getProceeds() >= 0 ? f.getProceeds() : 0.0) / totalShares;
+
+        for(Member m : shareholders) {
+            if(!proceedsDistMap.containsKey(m)) proceedsDistMap.put(m, new HashMap<>());
+            HashMap<ShareClass, Double> shareClassMap = proceedsDistMap.get(m);
+            for(ShareClass c : ShareClass.values()) {
+                shareClassMap.put(c, shareClassMap.getOrDefault(c, 0.0) + (m.getOwnedShares().get(c) * pricePerShare));
+            }
+            proceedsDistMap.put(m, shareClassMap);
+        }
+        f.setProceeds(0.0);
+    }
+
+    private static void repayInvestment(Firm f, HashMap<ShareClass, Integer> shareDistMap, HashMap<Member, Double> investments,
+                                        Set<Member> shareholders, HashMap<Member, HashMap<ShareClass, Double>> proceedsDistMap) {
+
+        int totalShares = shareDistMap.get(ShareClass.B);
+        double dues = investments.values().stream().mapToDouble(d -> d.doubleValue()).sum();
+        if(dues > f.getProceeds()) {
+            double pricePerShare = f.getProceeds() / totalShares;
+            for(Member m : shareholders) {
+                if(!proceedsDistMap.containsKey(m)) proceedsDistMap.put(m, new HashMap<>());
+                HashMap<ShareClass, Double> shareClassMap = proceedsDistMap.get(m);
+                shareClassMap.put(ShareClass.B, shareClassMap.getOrDefault(ShareClass.B, 0.0) + (m.getOwnedShares().get(ShareClass.B) * pricePerShare));
+                proceedsDistMap.put(m, shareClassMap);
+                if(investments.containsKey(m)) f.payProceeds(proceedsDistMap.get(m).get(ShareClass.B));
+            }
+        } else {
+            for(Member m : shareholders) {
+                if(!proceedsDistMap.containsKey(m)) proceedsDistMap.put(m, new HashMap<>());
+                HashMap<ShareClass, Double> shareClassMap = proceedsDistMap.get(m);
+                shareClassMap.put(ShareClass.B, shareClassMap.getOrDefault(ShareClass.B, 0.0) + investments.getOrDefault(m, 0.0));
+                proceedsDistMap.put(m, shareClassMap);
+                if(investments.containsKey(m)) f.payProceeds(investments.get(m));
+            }
+        }
     }
 }

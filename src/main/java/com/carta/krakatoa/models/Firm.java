@@ -9,13 +9,13 @@ import java.util.Set;
 
 public class Firm {
 
-    String name;
-    double proceeds;
-    Set<Member> shareholders;
-    HashMap<Member, Double> investments;
-    HashMap<ShareClass, Double> sharePriceMap;
-    HashMap<ShareClass, Integer> shareDistMap;
-    HashMap<Member, HashMap<ShareClass, Double>> proceedsDistMap;
+    private String name;
+    private double proceeds;
+    private Set<Member> shareholders;
+    private HashMap<Member, Double> investments;
+    private HashMap<ShareClass, Double> sharePriceMap;
+    private HashMap<ShareClass, Integer> shareDistMap;
+    private HashMap<Member, HashMap<ShareClass, Double>> proceedsDistMap;
 
 
     public Firm(String name, double proceeds) {
@@ -25,6 +25,9 @@ public class Firm {
         this.sharePriceMap = new HashMap<>();
         this.investments = new HashMap<>();
         this.shareDistMap = new HashMap<>();
+        for(ShareClass c : ShareClass.values()) {
+            shareDistMap.put(c, 0);
+        }
         this.proceedsDistMap = new HashMap<>();
     }
 
@@ -40,6 +43,18 @@ public class Firm {
         return sharePriceMap;
     }
 
+    public double getProceeds() {
+        return proceeds;
+    }
+
+    public void payProceeds(double d) {
+        this.proceeds -= d;
+    }
+
+    public void setProceeds(double proceeds) {
+        this.proceeds = proceeds;
+    }
+
     public HashMap<ShareClass, Integer> getShareDistMap() {
         return shareDistMap;
     }
@@ -48,45 +63,23 @@ public class Firm {
         investments.put(m, investments.getOrDefault(m, 0.0) + num);
     }
 
-    private void repayInvestment() {
-        int totalShares = shareDistMap.get(ShareClass.B);
-        double dues = investments.values().stream().mapToDouble(f -> f.doubleValue()).sum();
-        if(dues > proceeds) {
-            double pricePerShare = proceeds / totalShares;
-            for(Member m : shareholders) {
-                if(!proceedsDistMap.containsKey(m)) proceedsDistMap.put(m, new HashMap<>());
-                HashMap<ShareClass, Double> shareClassMap = proceedsDistMap.get(m);
-                shareClassMap.put(ShareClass.B, shareClassMap.getOrDefault(ShareClass.B, 0.0) + (m.getOwnedShares().get(ShareClass.B) * pricePerShare));
-                proceedsDistMap.put(m, shareClassMap);
-                if(investments.containsKey(m))proceeds -= proceedsDistMap.get(m).get(ShareClass.B);
-            }
-        } else {
-            for(Member m : shareholders) {
-                if(!proceedsDistMap.containsKey(m)) proceedsDistMap.put(m, new HashMap<>());
-                HashMap<ShareClass, Double> shareClassMap = proceedsDistMap.get(m);
-                shareClassMap.put(ShareClass.B, shareClassMap.getOrDefault(ShareClass.B, 0.0) + investments.getOrDefault(m, 0.0));
-                proceedsDistMap.put(m, shareClassMap);
-                if(investments.containsKey(m))proceeds -= investments.get(m);
-            }
-        }
-    }
-
-    public void distributeProceeds() {
-        repayInvestment();
-        int totalShares = shareDistMap.get(ShareClass.A) + shareDistMap.get(ShareClass.B) + shareDistMap.get(ShareClass.C);
-        double pricePerShare = proceeds / totalShares;
-        for(Member m : shareholders) {
-            if(!proceedsDistMap.containsKey(m)) proceedsDistMap.put(m, new HashMap<>());
-            HashMap<ShareClass, Double> shareClassMap = proceedsDistMap.get(m);
-            shareClassMap.put(ShareClass.A, shareClassMap.getOrDefault(ShareClass.A, 0.0) + (m.getOwnedShares().get(ShareClass.A) * pricePerShare));
-            shareClassMap.put(ShareClass.B, shareClassMap.getOrDefault(ShareClass.B, 0.0) + (m.getOwnedShares().get(ShareClass.B) * pricePerShare));
-            shareClassMap.put(ShareClass.C, shareClassMap.getOrDefault(ShareClass.C, 0.0) + (m.getOwnedShares().get(ShareClass.C) * pricePerShare));
-            proceedsDistMap.put(m, shareClassMap);
-        }
-        proceeds = 0;
-    }
-
     public HashMap<Member, HashMap<ShareClass, Double>> getProceedsDistMap() {
         return proceedsDistMap;
+    }
+
+    public HashMap<Member, Double> getInvestments() {
+        return investments;
+    }
+
+    public void setInvestments(HashMap<Member, Double> investments) {
+        this.investments = investments;
+    }
+
+    public Set<Member> getShareholders() {
+        return shareholders;
+    }
+
+    public void setShareholders(Set<Member> shareholders) {
+        this.shareholders = shareholders;
     }
 }

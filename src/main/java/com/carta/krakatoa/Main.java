@@ -26,7 +26,7 @@ public class Main {
             System.err.println(e.getMessage());
             return;
         }
-        f.distributeProceeds();
+        FirmUtil.distributeProceeds(f);
         printMemberCashAllocation(f);
         printShareCashAllocation(f);
     }
