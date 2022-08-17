@@ -5,7 +5,7 @@ package com.carta.krakatoa.models;
  *
  * Represents a General Partner in a firm
  *
- * @author Joshua Song
+ * @author js
  * @version 1.0
  */
 public class GeneralPartner extends Member{

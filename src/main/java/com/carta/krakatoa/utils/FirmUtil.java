@@ -14,7 +14,7 @@ import java.util.Set;
  *
  * Represents the Firm Util Object that contains all the firm share and proceeds business logic
  *
- * @author Joshua Song
+ * @author js
  * @version 1.0
  */
 public class FirmUtil {

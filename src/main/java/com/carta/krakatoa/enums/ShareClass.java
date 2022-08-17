@@ -3,7 +3,7 @@ package com.carta.krakatoa.enums;
 /**
  * Enum representing the different share classes available
  *
- * @author Joshua Song
+ * @author js
  * @version 1.0
  *
  */

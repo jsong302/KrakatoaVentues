@@ -4,7 +4,7 @@ package com.carta.krakatoa.models;
  *
  * Represents a Associate in a firm
  *
- * @author Joshua Song
+ * @author js
  * @version 1.0
  */
 public class Associate extends Member{

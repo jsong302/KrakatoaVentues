@@ -3,7 +3,7 @@ package com.carta.krakatoa.error;
 /**
  * Exception class specific to exceptions in the program
  *
- * @author Joshua Song
+ * @author js
  * @version 1.0
  *
  */

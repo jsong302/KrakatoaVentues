@@ -8,7 +8,7 @@ import java.util.HashMap;
  *
  * Represents a Member in a firm
  *
- * @author Joshua Song
+ * @author js
  * @version 1.0
  */
 public class Member {
