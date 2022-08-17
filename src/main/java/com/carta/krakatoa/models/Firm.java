@@ -7,6 +7,7 @@ import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Set;
 
+
 public class Firm {
 
     private String name;
@@ -17,11 +18,15 @@ public class Firm {
     private HashMap<ShareClass, Integer> shareDistMap;
     private HashMap<Member, HashMap<ShareClass, Double>> proceedsDistMap;
 
-
+    /**
+     *
+     * @param name
+     * @param proceeds
+     */
     public Firm(String name, double proceeds) {
         this.name = name;
         this.shareholders = new HashSet<>();
-        this.proceeds = proceeds;
+        this.proceeds = proceeds >= 0 ? proceeds : 0.0;
         this.sharePriceMap = new HashMap<>();
         this.investments = new HashMap<>();
         this.shareDistMap = new HashMap<>();

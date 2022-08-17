@@ -8,14 +8,19 @@ import com.google.gson.Gson;
 
 import java.util.HashMap;
 
+/**
+ * Main application for this project
+ */
 public class Main {
 
     public static void main(String[] args) {
         double proceeds = 0;
         try {
             proceeds = Double.parseDouble(args[0]);
+        } catch(ArrayIndexOutOfBoundsException e) {
+            System.err.println("Please give an integer value for argument 1");
+            return;
         } catch(NumberFormatException e) {
-            e.printStackTrace();
             System.err.println("Please give an integer value for argument 1");
             return;
         }
@@ -31,7 +36,7 @@ public class Main {
         printShareCashAllocation(f);
     }
 
-    public static void init(Firm f) throws CartaException {
+    private static void init(Firm f) throws CartaException {
 
         Member alex = new GeneralPartner("Alex");
         Member becky = new ManagingPartner("Becky");
@@ -45,7 +50,7 @@ public class Main {
         FirmUtil.purchaseShares(becky, f, ShareClass.B, 250.00);
     }
 
-    public static void printMemberCashAllocation(Firm f) {
+    private static void printMemberCashAllocation(Firm f) {
         HashMap<String, Double> cashAllocation = new HashMap<>();
         for(Member m : f.getProceedsDistMap().keySet()) {
             cashAllocation.put(m.getName(), f.getProceedsDistMap().get(m).values().stream().mapToDouble(p -> p.doubleValue()).sum());
@@ -54,7 +59,7 @@ public class Main {
         System.out.println(gson.toJson(cashAllocation));
     }
 
-    public static void printShareCashAllocation(Firm f) {
+    private static void printShareCashAllocation(Firm f) {
         HashMap<ShareClass, Double> cashAllocation = new HashMap<>();
         for(ShareClass c : ShareClass.values()) {
             cashAllocation.put(c, f.getProceedsDistMap().values().stream().mapToDouble(p -> p.get(c).doubleValue()).sum());

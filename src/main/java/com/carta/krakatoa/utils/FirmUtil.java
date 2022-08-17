@@ -10,8 +10,21 @@ import com.carta.krakatoa.models.Member;
 import java.util.HashMap;
 import java.util.Set;
 
+/**
+ *
+ * Represents the Firm Util Object that contains all the firm share and proceeds business logic
+ *
+ * @author Joshua Song
+ * @version 1.0
+ */
 public class FirmUtil {
 
+    /**
+     * Adds a member to the firm and gives shares dependent on the member class
+     *
+     * @param f - The Firm
+     * @param m - The Member
+     */
     public static void addMember(Firm f, Member m) {
         if(m instanceof Associate) {
             addShares(m, ShareClass.A, 10, f.getShareDistMap());
@@ -24,6 +37,17 @@ public class FirmUtil {
         f.addMember(m);
     }
 
+    /**
+     * Adds shares to the member's owned shares based on how much money they are investing.
+     * Adds the amount invested to the firm's investment list. Left over money is not added to investments
+     *
+     * @param m - The member investing
+     * @param f - The Firm being invested in
+     * @param c - The class of the share being bought
+     * @param n - The amount being invested
+     * @return - Integer denoting the number of shares purchased
+     * @throws CartaException
+     */
     public static Integer purchaseShares(Member m, Firm f, ShareClass c, Double n) throws CartaException {
         if(!f.getSharePriceMap().containsKey(c)) throw new CartaException("No Share Price is available for this class");
         Double investment = n - (n % f.getSharePriceMap().get(c));
@@ -38,12 +62,21 @@ public class FirmUtil {
         shareDistMap.put(c, shareDistMap.getOrDefault(c, 0) + n);
     }
 
+    /**
+     * Distribute proceeds to the shareholders.
+     * First it pays back any investments that were made by shareholders. If the amount of dues exceed the proceeds,
+     * then the funds are distributed according to the ratio of shares that each investor holds
+     * Once all the investments have been paid bac, it then equally distributes the remaining proceeds to other all shareholders.
+     *
+     * @param f - The firm that is distributing money
+     */
     public static void distributeProceeds(Firm f) {
         HashMap<ShareClass, Integer> shareDistMap = f.getShareDistMap();
         HashMap<Member, Double> investments = f.getInvestments();
         Set<Member> shareholders = f.getShareholders();
         HashMap<Member, HashMap<ShareClass, Double>> proceedsDistMap = f.getProceedsDistMap();
 
+        //Repays investments
         repayInvestment(f, shareDistMap, investments, shareholders, proceedsDistMap);
 
         int totalShares = 0;
