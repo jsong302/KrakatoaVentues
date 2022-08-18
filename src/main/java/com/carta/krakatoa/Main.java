@@ -5,6 +5,8 @@ import com.carta.krakatoa.error.CartaException;
 import com.carta.krakatoa.models.*;
 import com.carta.krakatoa.utils.FirmUtil;
 import com.google.gson.Gson;
+import org.apache.commons.math3.util.MathUtils;
+import org.apache.commons.math3.util.Precision;
 
 import java.util.HashMap;
 
@@ -53,7 +55,7 @@ public class Main {
     private static void printMemberCashAllocation(Firm f) {
         HashMap<String, Double> cashAllocation = new HashMap<>();
         for(Member m : f.getProceedsDistMap().keySet()) {
-            cashAllocation.put(m.getName(), f.getProceedsDistMap().get(m).values().stream().mapToDouble(p -> p.doubleValue()).sum());
+            cashAllocation.put(m.getName(), Precision.round(f.getProceedsDistMap().get(m).values().stream().mapToDouble(p -> p.doubleValue()).sum(), 2));
         }
         Gson gson = new Gson();
         System.out.println(gson.toJson(cashAllocation));
@@ -62,7 +64,7 @@ public class Main {
     private static void printShareCashAllocation(Firm f) {
         HashMap<ShareClass, Double> cashAllocation = new HashMap<>();
         for(ShareClass c : ShareClass.values()) {
-            cashAllocation.put(c, f.getProceedsDistMap().values().stream().mapToDouble(p -> p.get(c).doubleValue()).sum());
+            cashAllocation.put(c, Precision.round(f.getProceedsDistMap().values().stream().mapToDouble(p -> p.get(c).doubleValue()).sum(), 2));
         }
 
         Gson gson = new Gson();
