@@ -3,9 +3,8 @@ package com.carta.krakatoa;
 import com.carta.krakatoa.enums.ShareClass;
 import com.carta.krakatoa.error.CartaException;
 import com.carta.krakatoa.models.*;
-import com.carta.krakatoa.utils.FirmUtil;
+import com.carta.krakatoa.controllers.FirmController;
 import com.google.gson.Gson;
-import org.apache.commons.math3.util.MathUtils;
 import org.apache.commons.math3.util.Precision;
 
 import java.util.HashMap;
@@ -33,7 +32,7 @@ public class Main {
             System.err.println(e.getMessage());
             return;
         }
-        FirmUtil.distributeProceeds(f);
+        FirmController.distributeProceeds(f);
         printMemberCashAllocation(f);
         printShareCashAllocation(f);
     }
@@ -45,11 +44,11 @@ public class Main {
         Member david = new Associate("David");
         f.addSharePrice(ShareClass.B, 25.00);
 
-        FirmUtil.addMember(f, alex);
-        FirmUtil.addMember(f, becky);
-        FirmUtil.addMember(f, david);
-        FirmUtil.purchaseShares(alex, f, ShareClass.B, 250.00);
-        FirmUtil.purchaseShares(becky, f, ShareClass.B, 250.00);
+        FirmController.addMember(f, alex);
+        FirmController.addMember(f, becky);
+        FirmController.addMember(f, david);
+        FirmController.purchaseShares(alex, f, ShareClass.B, 250.00);
+        FirmController.purchaseShares(becky, f, ShareClass.B, 250.00);
     }
 
     private static void printMemberCashAllocation(Firm f) {

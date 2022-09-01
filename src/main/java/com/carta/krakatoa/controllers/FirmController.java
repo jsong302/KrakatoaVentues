@@ -1,4 +1,4 @@
-package com.carta.krakatoa.utils;
+package com.carta.krakatoa.controllers;
 
 import com.carta.krakatoa.enums.ShareClass;
 import com.carta.krakatoa.error.CartaException;
@@ -12,12 +12,12 @@ import java.util.Set;
 
 /**
  *
- * Represents the Firm Util Object that contains all the firm share and proceeds business logic
+ * Represents the Firm Controller Object that contains all the firm share and proceeds business logic
  *
  * @author js
  * @version 1.0
  */
-public class FirmUtil {
+public class FirmController {
 
     /**
      * Adds a member to the firm and gives shares dependent on the member class
